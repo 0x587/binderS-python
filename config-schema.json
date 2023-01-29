@@ -32,6 +32,11 @@
                                     "title": "Column type",
                                     "description": "Type of column."
                                 },
+                                "size": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 1024
+                                },
                                 "indexed": {
                                     "type": "boolean",
                                     "default": false,
@@ -45,6 +50,22 @@
                                     "description": "Whether the value of the column is unique."
                                 }
                             },
+                            "anyOf": [
+                                {
+                                    "not": {
+                                        "properties": {
+                                            "type": {
+                                                "const": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "required": [
+                                        "size"
+                                    ]
+                                }
+                            ],
                             "title": "Column",
                             "required": [
                                 "name",
