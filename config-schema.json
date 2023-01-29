@@ -2,37 +2,75 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "properties": {
-        "schemas": {
+        "sources": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "title": "Source name",
+                        "description": "Name of data source."
                     },
-                    "data": {
+                    "columns": {
                         "type": "array",
                         "items": {
                             "type": "object",
                             "properties": {
                                 "name": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "title": "Column name",
+                                    "description": "Name of column."
                                 },
                                 "type": {
-                                    "type": "string"
+                                    "enum": [
+                                        "string",
+                                        "datetime",
+                                        "int",
+                                        "float"
+                                    ],
+                                    "title": "Column type",
+                                    "description": "Type of column."
+                                },
+                                "indexed": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "Indexed column",
+                                    "description": "Whether the column is an index column."
+                                },
+                                "unique": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "title": "Unique column",
+                                    "description": "Whether the value of the column is unique."
                                 }
                             },
+                            "title": "Column",
                             "required": [
                                 "name",
                                 "type"
-                            ]
-                        }
+                            ],
+                            "description": "Column of data source."
+                        },
+                        "uniqueItems": true,
+                        "title": "Source column",
+                        "description": "A list of columns for the data source."
                     }
                 },
+                "title": "Source",
                 "required": [
-                    "name"
-                ]
-            }
+                    "name",
+                    "columns"
+                ],
+                "description": "Data source."
+            },
+            "uniqueItems": true,
+            "title": "Sources",
+            "description": "List of data sources. Corresponding database table structure."
         }
-    }
+    },
+    "title": "root",
+    "required": [
+        "sources"
+    ]
 }

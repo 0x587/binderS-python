@@ -11,6 +11,12 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": "binder.json",
+        "url": "https://raw.githubusercontent.com/0x587/binderS-python/main/config-schema.json"
+      }
+    ],
     "commands": [
       {
         "command": "binders-python.hello-world",
