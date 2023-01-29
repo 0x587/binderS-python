@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import { posix } from 'path';
 import * as vscode from 'vscode';
+import { ConfigSchema, Configer } from './Configer';
 import { SchemaProvider } from './SchemaProvider';
 
 // This method is called when your extension is activated
@@ -23,15 +24,9 @@ export async function activate(context: vscode.ExtensionContext) {
 	const schemaProvider = new SchemaProvider();
 	vscode.window.registerTreeDataProvider('binder-schema', schemaProvider);
 	vscode.commands.registerCommand('binders-python.schemas.refreshEntry', () => schemaProvider.refresh());
-	if (!vscode.workspace.workspaceFolders) {
-		return vscode.window.showInformationMessage('No folder or workspace opened');
-	}
-
-	const folderUri = vscode.workspace.workspaceFolders[0].uri;
-	const configFileUri = folderUri.with({ path: posix.join(folderUri.path, 'binder.json') });
-	const configData = await vscode.workspace.fs.readFile(configFileUri);
-	const config = JSON.parse(Buffer.from(configData).toString('utf8'));
-	console.log(config);
+	
+	const config = await Configer.load();
+	if (config) { const configer = new Configer(config); }
 
 
 	// vscode.languages.registerHoverProvider('json', {

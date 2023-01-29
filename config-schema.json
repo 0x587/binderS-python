@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
         "sources": {
@@ -35,7 +35,10 @@
                                 "size": {
                                     "type": "integer",
                                     "minimum": 0,
-                                    "maximum": 1024
+                                    "maximum": 1024,
+                                    "multipleOf": 2,
+                                    "title": "Column size",
+                                    "description": "The size of column, just use in string."
                                 },
                                 "indexed": {
                                     "type": "boolean",
@@ -50,22 +53,26 @@
                                     "description": "Whether the value of the column is unique."
                                 }
                             },
-                            "anyOf": [
-                                {
-                                    "not": {
-                                        "properties": {
-                                            "type": {
-                                                "const": "string"
-                                            }
-                                        }
+                            "if": {
+                                "properties": {
+                                    "type": {
+                                        "const": "string"
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "size": {
+                                        "type": "integer",
+                                        "minimum": 0,
+                                        "maximum": 1024,
+                                        "multipleOf": 2
                                     }
                                 },
-                                {
-                                    "required": [
-                                        "size"
-                                    ]
-                                }
-                            ],
+                                "required": [
+                                    "size"
+                                ]
+                            },
                             "title": "Column",
                             "required": [
                                 "name",
@@ -76,6 +83,43 @@
                         "uniqueItems": true,
                         "title": "Source column",
                         "description": "A list of columns for the data source."
+                    },
+                    "relationship": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "Link target identifier."
+                                },
+                                "target": {
+                                    "type": "string",
+                                    "description": "The name of the link target, which must be the name of the available data source."
+                                },
+                                "reflect": {
+                                    "type": "string",
+                                    "description": "An identifier reflected to the target data source that cannot duplicate the column name of the target data source."
+                                },
+                                "mapping": {
+                                    "type": "string",
+                                    "enum": [
+                                        "1-1",
+                                        "1-n",
+                                        "n-n"
+                                    ],
+                                    "description": "The relationship to the link target."
+                                }
+                            },
+                            "required": [
+                                "mapping",
+                                "name",
+                                "target"
+                            ]
+                        },
+                        "uniqueItems": true,
+                        "title": "Connected relation",
+                        "description": "A list of data sources to which this data source is connected."
                     }
                 },
                 "title": "Source",
